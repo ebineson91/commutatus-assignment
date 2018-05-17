@@ -1,0 +1,166 @@
+<div *ngIf="opportunitiesList">
+    <div class="jumbotron jumbotron-fluid">
+       <div class="container">
+          <h1 class="display-4">{{opportunitiesList.title}}</h1>
+          <p class="lead">Description : {{opportunitiesList.description}}</p>
+          <p class="lead">Location : {{opportunitiesList.role_info.city}}</p>
+          <button type="button" class="btn btn-primary">Login to Apply</button>
+       </div>
+    </div>
+    <div class="container-fluid">
+       <div class="card mt-3">
+          <div class="card-body">
+             <div class="row">
+                <div class="col-sm-3">
+                    <b>No. of Position: </b>{{opportunitiesList.available_openings}}
+                 </div>
+                 <div class="col-sm-3">
+                    <b>Duration: </b>{{opportunitiesList.duration_max}} Weeks
+                 </div>
+                <div class="col-sm-6">
+                   <button type="button" class="btn btn-primary float-right" (click)="staticModal.show()">
+                   Edit Application
+                   </button>  
+                </div>
+             </div>
+          </div>
+       </div>
+       <div class="row">
+          <div class="col-sm-6">
+             <div class="card text-white bg-info mt-3">
+                <div class="card-body">
+                   <h5 class="card-title">Backgrounds</h5>
+                   <p *ngFor="let background of opportunitiesList.backgrounds">{{background.name}}</p>
+                </div>
+             </div>
+             <div class="card text-white bg-success mt-3">
+                <div class="card-body">
+                   <h5 class="card-title">Skills</h5>
+                   <p *ngFor="let skill of opportunitiesList.skills">{{skill.name}}</p>
+                </div>
+             </div>
+             <div class="card text-white bg-danger mt-3" >
+                <div class="card-body">
+                   <h5 class="card-title">Languages</h5>
+                   <p *ngFor="let language of opportunitiesList.languages">{{language.option}} : {{language.name}}</p>
+                </div>
+             </div>
+          </div>
+          <div class="col-sm-6">
+             <div class="card-header">
+                <ul class="list-group list-group-flush">
+                   <li class="list-group-item"><b>Start Date: </b>{{opportunitiesList.earliest_start_date | date: 'dd/MM/yyyy'}}</li>
+                   <li class="list-group-item"><b>Latest End Date: </b>{{opportunitiesList.latest_end_date | date: 'dd/MM/yyyy'}}</li>
+                   <li class="list-group-item"><b>Close Date: </b>{{opportunitiesList.applications_close_date | date: 'dd/MM/yyyy'}}</li>
+                </ul>
+             </div>
+             <div class="card-header">
+                <ul class="list-group list-group-flush">
+                   <li class="list-group-item"><b>Selection Process: </b>{{opportunitiesList.role_info.selection_process}}</li>
+                   <li class="list-group-item"><b>Salary: </b>{{opportunitiesList.specifics_info.salary | currency:'INR':true}} Per Month</li>
+                   <li class="list-group-item"><b>City: </b>{{opportunitiesList.role_info.city}}</li>
+                </ul>
+             </div>
+             <div class="card bg-light mt-3">
+                <div class="card-body">
+                   <h5 class="card-title">Location</h5>
+                   <div id="googleMap" style="width:600px;height:200px;" ></div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static',keyboard: false}" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+ <div class="modal-dialog modal-lg" *ngIf="opportunitiesList">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h4 id="dialog-static-name" class="modal-title pull-left">Edit Opportunity Details</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+          </button>
+       </div>
+       <div class="modal-body">
+          <div class="form-group row">
+             <label for="title" class="col-sm-4 col-form-label required">Title</label>
+             <div class="col-sm-6">
+                <input type="text" pattern="/^\S*$/" class="form-control" id="title" placeholder="Title" [(ngModel)]="opportunitiesList.title" maxlength="100" [ngClass]="{'err': !opportunitiesList.title}">
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="description" class="col-sm-4 col-form-label required">Description</label>
+             <div class="col-sm-6">
+                <input type="text" class="form-control" id="description" placeholder="Description" [(ngModel)]="opportunitiesList.description" [ngClass]="{'err': !opportunitiesList.description}">
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="selprocess" class="col-sm-4 col-form-label required">Selection Process</label>
+             <div class="col-sm-6">
+                <input type="text" class="form-control" id="selprocess" placeholder="Selection Process" [(ngModel)]="opportunitiesList.role_info.selection_process" [ngClass]="{'err': !opportunitiesList.role_info.selection_process}">
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="salary" class="col-sm-4 col-form-label required">Salary</label>
+             <div class="col-sm-6">
+                <input type="number" class="form-control" id="salary" placeholder="Salary" [(ngModel)]="opportunitiesList.specifics_info.salary"  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                type = "number" maxlength = "10" [ngClass]="{'err': !opportunitiesList.specifics_info.salary}">
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="city" class="col-sm-4 col-form-label required">City</label>
+             <div class="col-sm-6">
+                <input id="city" ngx-google-places-autocomplete #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" class="form-control" [(ngModel)]="opportunitiesList.role_info.city" [ngClass]="{'err': !opportunitiesList.role_info.city}" >
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="background" class="col-sm-4 col-form-label required">Background</label>
+             <div class="col-sm-6">
+                <ng-multiselect-dropdown name="background" [placeholder]="'Select Background'" [data]="allbackgroundList" [(ngModel)]="opportunitiesList.backgrounds" 
+                [settings]="bgdropdownSettings" [ngClass]="{'multi': !opportunitiesList.backgrounds.length}">
+                </ng-multiselect-dropdown>
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="background" class="col-sm-4 col-form-label required">Skills</label>
+             <div class="col-sm-6">
+                <ng-multiselect-dropdown name="skills" [placeholder]="'Select Skills'" [data]="allskillList" [(ngModel)]="opportunitiesList.skills"
+                [settings]="skilldropdownSettings" [ngClass]="{'multi': !opportunitiesList.skills.length}">
+                </ng-multiselect-dropdown>
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="city" class="col-sm-4 col-form-label required">Start Date</label>
+             <div class="col-sm-6">
+                <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [bsValue]="opportunitiesList.earliest_start_date" (bsValueChange)="onValueChange($event,'startdate')" placement="top"
+                [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" [ngClass]="{'err': !opportunitiesList.earliest_start_date}" >
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="city" class="col-sm-4 col-form-label required">End Date</label>
+             <div class="col-sm-6">
+                <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [bsValue]="opportunitiesList.latest_end_date"  (bsValueChange)="onValueChange($event,'endDate')" placement="top"
+                [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" [ngClass]="{'err': !opportunitiesList.latest_end_date}">
+             </div>
+          </div>
+          <div class="form-group row">
+             <label for="city" class="col-sm-4 col-form-label required">Close Date</label>
+             <div class="col-sm-6">
+                <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker  [bsValue]="opportunitiesList.applications_close_date" (bsValueChange)="onValueChange($event,'closeDate')" placement="top"
+                [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" [ngClass]="{'err': !opportunitiesList.applications_close_date}">
+             </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <p><span class="required">Asterisk fields</span>are Mandatory</p>
+            </div>
+            <div class= "offset-sm-3 col-sm-3">
+                <button type="button" class="btn btn-secondary float-left" (click)="closeModal()">Close</button>
+                <button type="button" class="btn btn-primary float-right" (click)="submit()" [disabled]="(!opportunitiesList.title || !opportunitiesList.description  || !opportunitiesList.applications_close_date  || !opportunitiesList.earliest_start_date  || !opportunitiesList.backgrounds.length  || !opportunitiesList.skills.length  || !opportunitiesList.specifics_info.salary
+                || !opportunitiesList.role_info.city  || !opportunitiesList.role_info.selection_process ||!opportunitiesList.latest_end_date )">Submit</button>
+            </div>
+          </div>
+          
+       </div>
+    </div>
+ </div>
+ </div>

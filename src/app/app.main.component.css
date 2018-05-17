@@ -1,0 +1,38 @@
+.jumbotron{
+    background-color: #6c757d;
+    color: #fff;
+    background-image: url("https://cdn-expa.aiesec.org/gis-img/gt_default.png");
+    width: 100%;
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.jumbotron .display-4{
+      font-weight: 600 !important;  
+}
+
+.jumbotron .lead {
+    font-weight: 400 !important;
+}
+
+.card-body > p,.jumbotron {
+    text-transform: capitalize !important;
+}
+
+.required:after {
+    content: "*";
+    padding-left:1%;
+    color:#ec1e0f;
+}
+
+.multi .dropdown-btn,.err{
+    border: 1px solid #ec1e0f !important;  
+}
+
+.form-control {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+  }
