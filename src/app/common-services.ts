@@ -45,7 +45,7 @@ export class commonServices {
         }
         var diff = Math.abs(opportunity.applications_close_date.getTime() - currentDate.getTime());
         var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-        if (diffDays >= 30 && diffDays <= 92) {
+        if (diffDays >= 30 && diffDays <= 90) {
             let data = this.formPostData(opportunity);
             return { 'validation': true, 'data': data.opportunity };
         } else {
